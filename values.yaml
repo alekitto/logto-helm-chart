@@ -1,0 +1,118 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/logto-io/logto
+  pullPolicy: IfNotPresent
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+database:
+  dsn: ~
+  host: ~
+  port: ~
+  dbname: ~
+  username: ~
+  password:
+    useSecret: false
+    value: ''
+    secret: ''
+    key: ''
+  sslmode: prefer
+  sslcert: ~
+  sslkey: ~
+  sslpassword: ~
+  sslrootcert: ~
+
+redis:
+  enabled: false
+  dsn: ~
+  host: ~
+  port: ~
+  username: ~
+  password: ~
+  tls: false
+
+trustProxyHeader: true
+
+storageProvider:
+  enabled: false
+  type: s3 # use s3 for S3-compatible storages such as MinIO, azure for Azure Storage
+  publicUrl: ~ # use CDN endpoints
+
+  ## s3 specific configuration
+  accessKeyId: ~
+  accessSecretKey: ~
+  bucket: ~ # required
+  region: ~
+  endpoint: ~ # required if not using AWS S3
+
+  ## azure specific configuration
+  connectionString: ~ # required
+  container: ~ # required
+
+core:
+  endpoint: ""
+  port: 3001
+  service:
+    type: ClusterIP
+    port: 3001
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    hosts:
+      - host: logto.io
+        paths:
+          - path: /
+            pathType: Prefix
+#    tls:
+#      - hosts:
+#          - logto.io
+#        secretName: logto-tls
+    tls: []
+
+admin:
+  endpoint: ""
+  port: 3002
+  service:
+    type: ClusterIP
+    port: 3002
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    hosts:
+      - host: admin.logto.io
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+resources: {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

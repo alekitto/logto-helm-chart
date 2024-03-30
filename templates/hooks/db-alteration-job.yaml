@@ -1,0 +1,66 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "logto.fullname" . }}-db-alteration
+  labels:
+    {{- include "logto.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "10"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "logto.selectorLabels" . | nindent 8 }}
+    spec:
+      restartPolicy: Never
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "logto.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if or .Values.database.sslcert .Values.database.sslkey .Values.database.sslrootcert }}
+      volumes:
+        - name: sslcerts
+          configMap:
+            name: {{ include "logto.fullname" . }}-ssl
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: alteration
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+          args:
+            - '-c'
+            - 'npm run alteration deploy latest'
+          env:
+            - name: DB_URL
+              value: {{ include "logto.databaseDSN" . | quote }}
+            - name: CI
+              value: 'true'
+            {{- if .Values.database.password.useSecret }}
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: {{ .Values.database.password.secret | quote }}
+                  name: {{ .Values.database.password.key | quote }}
+            {{- end }}
+          {{- if or .Values.database.sslcert .Values.database.sslkey .Values.database.sslrootcert }}
+          volumeMounts:
+            - mountPath: /ssl
+              name: sslcerts
+          {{- end }}
