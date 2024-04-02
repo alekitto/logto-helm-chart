@@ -61,8 +61,8 @@ spec:
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
-                  key: {{ .Values.database.password.secret | quote }}
-                  name: {{ .Values.database.password.key | quote }}
+                  key: {{ .Values.database.password.key | quote }}
+                  name: {{ .Values.database.password.secret | quote }}
             {{- end }}
           {{- if or .Values.database.sslcert .Values.database.sslkey .Values.database.sslrootcert }}
           volumeMounts:
