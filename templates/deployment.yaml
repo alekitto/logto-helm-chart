@@ -59,7 +59,7 @@ spec:
             - /bin/sh
           args:
             - '-c'
-            - 'npm run cli db seed -- --swe && npm start'
+            - 'npm start'
           env:
             {{- if .Values.trustProxyHeader }}
             - name: TRUST_PROXY_HEADER
