@@ -76,7 +76,7 @@ accessSecretKey: {{ .Values.storageProvider.accessSecretKey | quote }}
 region: {{ .Values.storageProvider.region | quote }}
 {{- end }}
 {{- if .Values.storageProvider.endpoint }}
-region: {{ .Values.storageProvider.endpoint | quote }}
+endpoint: {{ .Values.storageProvider.endpoint | quote }}
 {{- end }}
 {{- end }}
 {{- if eq .Values.storageProvider.type "azure" -}}
@@ -85,7 +85,7 @@ connectionString: {{ required "ConnectionString is required when using Azure sto
 container: {{ required "Container is required when using Azure storage" .Values.storageProvider.container | quote }}
 {{- end }}
 {{- if .Values.storageProvider.publicUrl }}
-region: {{ .Values.storageProvider.publicUrl | quote }}
+publicUrl: {{ .Values.storageProvider.publicUrl | quote }}
 {{- end }}
 {{- end }}
 
