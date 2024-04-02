@@ -59,6 +59,7 @@ core:
   service:
     type: ClusterIP
     port: 3001
+    annotations: {}
   ingress:
     enabled: false
     className: ""
@@ -80,6 +81,7 @@ admin:
   service:
     type: ClusterIP
     port: 3002
+    annotations: {}
   ingress:
     enabled: false
     className: ""

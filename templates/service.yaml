@@ -4,6 +4,10 @@ metadata:
   name: {{ include "logto.fullname" . }}-core
   labels:
     {{- include "logto.labels" . | nindent 4 }}
+  {{- with .Values.core.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   type: {{ .Values.core.service.type }}
   ports:
@@ -20,6 +24,10 @@ metadata:
   name: {{ include "logto.fullname" . }}-admin
   labels:
     {{- include "logto.labels" . | nindent 4 }}
+  {{- with .Values.admin.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   type: {{ .Values.admin.service.type }}
   ports:

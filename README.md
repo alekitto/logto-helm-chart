@@ -1,6 +1,6 @@
 # Logto helm charts
 
-This Logto Chart is the best way to operate Grafana OnCall on Kubernetes.
+This Logto Chart is the best way to deploy Logto (https://logto.io/) on Kubernetes.
 
 ## Usage
 
