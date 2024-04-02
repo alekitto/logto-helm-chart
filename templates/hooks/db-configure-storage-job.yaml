@@ -38,20 +38,16 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        - name: alteration
+        - name: configure
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: IfNotPresent
           command:
-            - pnpm
+            - /bin/sh
           args:
-            - logto
-            - db
-            - system
-            - set
-            - storageProvider
-            - {{ include "logto.storageProvider" . | quote }}
+            - '-c'
+            - 'npm run cli db system set storageProvider {{ include "logto.storageProvider" . | quote }}'
           env:
             - name: DB_URL
               value: {{ include "logto.databaseDSN" . | quote }}
