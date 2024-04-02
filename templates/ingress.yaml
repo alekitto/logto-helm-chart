@@ -14,7 +14,7 @@ apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
+  name: {{ $fullName }}-admin
   labels:
     {{- include "logto.labels" . | nindent 4 }}
   {{- with .Values.admin.ingress.annotations }}
@@ -75,7 +75,7 @@ apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
+  name: {{ $fullName }}-core
   labels:
     {{- include "logto.labels" . | nindent 4 }}
   {{- with .Values.core.ingress.annotations }}
