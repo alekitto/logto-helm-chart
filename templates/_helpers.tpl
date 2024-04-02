@@ -104,16 +104,19 @@ Define database DSN
 {{ .Values.database.dsn | quote }}
 {{- end -}}
 {{- if not .Values.database.dsn -}}
-host={{ required "Database host must be defined" .Values.database.host | squote }}
-{{- if .Values.database.port }} port={{ .Values.database.port }}{{- end -}}
-{{- if .Values.database.username }} user={{ .Values.database.username | squote }}{{- end -}}
-{{- if and (not .Values.database.password.useSecret) .Values.database.password.value }} password={{ .Values.database.password.value | squote }}{{- end -}}
-{{- if .Values.database.dbname }} user={{ .Values.database.dbname | squote }}{{- end -}}
-{{- if .Values.database.sslmode }} sslmode={{ .Values.database.sslmode | squote }}{{- end -}}
-{{- if .Values.database.sslcert }} sslcert=/ssl/cert.crt{{- end -}}
-{{- if .Values.database.sslkey }} sslkey=/ssl/cert.key{{- end -}}
-{{- if .Values.database.sslpassword }} sslpassword={{ .Values.database.sslpassword | squote }}{{- end -}}
-{{- if .Values.database.sslrootcert }} sslrootcert=/ssl/ca.pem{{- end -}}
+postgresql://
+{{- if .Values.database.username -}}{{ .Values.database.username | urlquery }}{{- end -}}
+{{- if and (not .Values.database.password.useSecret) .Values.database.password.value -}}:{{ .Values.database.password.value | urlquery }}{{- end -}}
+{{- if or .Values.database.username .Values.database.password.value -}}@{{- end -}}
+{{ required "Database host must be defined" .Values.database.host | urlquery }}
+{{- if .Values.database.port }}:{{ .Values.database.port }}{{- end -}}
+{{- if .Values.database.dbname }}/{{ .Values.database.dbname | urlquery }}{{- end -}}
+?
+{{- if .Values.database.sslmode }}sslmode={{ .Values.database.sslmode | urlquery }}{{- end -}}
+{{- if .Values.database.sslcert }}&sslcert=/ssl/cert.crt{{- end -}}
+{{- if .Values.database.sslkey }}&sslkey=/ssl/cert.key{{- end -}}
+{{- if .Values.database.sslpassword }}&sslpassword={{ .Values.database.sslpassword | urlquery }}{{- end -}}
+{{- if .Values.database.sslrootcert }}&sslrootcert=/ssl/ca.pem{{- end -}}
 {{- end }}
 {{- end }}
 
